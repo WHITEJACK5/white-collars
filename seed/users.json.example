@@ -1,0 +1,20 @@
+[
+    {
+        "name":  "System",
+        "email":  "admin@whitecollarsjobs.com",
+        "userType":  null,
+        "isActive":  true
+    },
+    {
+        "name":  "REDDY",
+        "email":  "dev.red.rt24@dypatil.edu",
+        "userType":  "jobseeker",
+        "isActive":  true
+    },
+    {
+        "name":  "REDDY",
+        "email":  "bharadawajareddydevireddy@gmail.com",
+        "userType":  "employer",
+        "isActive":  true
+    }
+]

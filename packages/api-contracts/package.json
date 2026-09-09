@@ -1,0 +1,12 @@
+{
+  "name": "@white-collars/api-contracts",
+  "version": "1.0.0",
+  "description": "Shared API contracts (OpenAPI) — the proto-schemas equivalent",
+  "main": "index.js",
+  "files": ["*.yaml", "README.md"],
+  "publishConfig": { "access": "public" },
+  "scripts": {
+    "lint": "npx @redocly/cli lint *.yaml",
+    "validate": "npx swagger-cli validate users.yaml && npx swagger-cli validate auth.yaml && npx swagger-cli validate jobs.yaml && npx swagger-cli validate applications.yaml && npx swagger-cli validate notifications.yaml"
+  }
+}

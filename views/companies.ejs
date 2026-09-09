@@ -1,0 +1,44 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <h1>Top Companies</h1>
+    <p>Leading companies hiring on WHITE COLLARS</p>
+  </div>
+</div>
+
+<section class="content-section">
+  <div class="container">
+    <h2 class="section-title">Featured Companies</h2>
+    <div class="companies-table-container">
+      <table class="companies-table">
+        <tbody>
+          <% 
+          const chunkSize = 5;
+          for(let i = 0; i < companies.length; i += chunkSize) {
+            const chunk = companies.slice(i, i + chunkSize);
+          %>
+            <tr>
+              <% chunk.forEach(company => { %>
+                <td onclick="window.location.href='/companies/<%= company._id %>'">
+                  <img src="<%= company.logo %>" class="company-img" alt="<%= company.name %>" onerror="this.src='https://placehold.co/48x48?text=LOGO'">
+                  <div class="company-name"><%= company.name %></div>
+                </td>
+              <% }) %>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if (!companies || companies.length === 0) { %>
+      <div class="card" style="text-align:center; padding:4rem;">
+        <h3 style="border:none;">No companies listed yet</h3>
+        <p class="text-muted" style="margin-top:1rem;">Check back soon for new company profiles.</p>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

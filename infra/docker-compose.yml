@@ -1,0 +1,59 @@
+version: "3.8"
+services:
+  mongo:
+    image: mongo:7
+    ports: ["27017:27017"]
+    volumes: ["mongo_data:/data/db"]
+
+  users-service:
+    build: ../services/users-service
+    ports: ["3001:3001"]
+    env_file: ../.env
+    environment:
+      - USERS_SERVICE_PORT=3001
+      - MONGODB_URI=mongodb://mongo:27017/white-collars
+    depends_on: [mongo]
+
+  auth-service:
+    build: ../services/auth-service
+    ports: ["3002:3002"]
+    env_file: ../.env
+    environment:
+      - AUTH_SERVICE_PORT=3002
+      - USERS_SERVICE_URL=http://users-service:3001
+      - MONGODB_URI=mongodb://mongo:27017/white-collars
+    depends_on: [users-service, mongo]
+
+  jobs-service:
+    build: ../services/jobs-service
+    ports: ["3003:3003"]
+    env_file: ../.env
+    environment:
+      - JOBS_SERVICE_PORT=3003
+      - MONGODB_URI=mongodb://mongo:27017/white-collars
+    depends_on: [mongo]
+
+  applications-service:
+    build: ../services/applications-service
+    ports: ["3004:3004"]
+    env_file: ../.env
+    environment:
+      - APPLICATIONS_SERVICE_PORT=3004
+      - JOBS_SERVICE_URL=http://jobs-service:3003
+      - MONGODB_URI=mongodb://mongo:27017/white-collars
+    depends_on: [jobs-service, mongo]
+
+  api-gateway:
+    build: ../apps/api-gateway
+    ports: ["3000:3000"]
+    env_file: ../.env
+    environment:
+      - GATEWAY_PORT=3000
+      - USERS_SERVICE_URL=http://users-service:3001
+      - AUTH_SERVICE_URL=http://auth-service:3002
+      - JOBS_SERVICE_URL=http://jobs-service:3003
+      - APPLICATIONS_SERVICE_URL=http://applications-service:3004
+    depends_on: [users-service, auth-service, jobs-service, applications-service]
+
+volumes:
+  mongo_data:

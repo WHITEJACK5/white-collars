@@ -1,0 +1,132 @@
+openapi: 3.0.3
+info:
+  title: applications-service
+  version: 1.0.0
+  description: Owns Application + resume/video blobs. Calls jobs-service to validate job, users-service for applicant, notifications-service for status.
+servers:
+  - url: http://applications-service:3004
+paths:
+  /applications:
+    post:
+      summary: One-click apply (jobseeker)
+      security: [{ cookieAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [jobId]
+              properties:
+                jobId: { type: string }
+                coverLetter: { type: string, maxLength: 2000 }
+                resume:
+                  type: string
+                  format: binary
+                  description: "PDF/DOC, 5MB"
+                video:
+                  type: string
+                  format: binary
+                  description: "MP4/MOV/WebM, 50MB — will become mandatory for select roles"
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Application' } } } }
+        '400': { description: Already applied or deadline expired }
+        '404': { description: Job not found (from jobs-service) }
+    get:
+      summary: List applications (filter by jobId or userId)
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - name: jobId
+          in: query
+          schema: { type: string }
+        - name: userId
+          in: query
+          schema: { type: string }
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 12 }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  applications: { type: array, items: { $ref: '#/components/schemas/Application' } }
+                  pagination: { $ref: 'jobs.yaml#/components/schemas/Pagination' }
+  /applications/{id}:
+    get:
+      summary: Get application detail
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Application' } } } }
+        '404': { description: Not found }
+  /applications/{id}/status:
+    patch:
+      summary: Update status (employer) — triggers notification
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status: { type: string, enum: [pending, reviewed, shortlisted, interview-scheduled, rejected, accepted, withdrawn] }
+                note: { type: string }
+      responses:
+        '200': { description: Updated }
+        '403': { description: Not owner of job }
+  /applications/{id}/video:
+    post:
+      summary: Upload mandatory video (separate endpoint for large files)
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [video]
+              properties:
+                video: { type: string, format: binary }
+      responses:
+        '200': { description: Video saved }
+
+components:
+  securitySchemes:
+    cookieAuth: { type: apiKey, in: cookie, name: wc.sid }
+  schemas:
+    Application:
+      type: object
+      properties:
+        id: { type: string }
+        job: { type: string, description: "Job id (from jobs-service)" }
+        user: { type: string, description: "User id (from users-service)" }
+        coverLetter: { type: string }
+        resume: { type: object, properties: { filename: { type: string }, path: { type: string } } }
+        status: { type: string, enum: [pending, reviewed, shortlisted, interview-scheduled, rejected, accepted, withdrawn] }
+        statusHistory: { type: array, items: { type: object } }
+        interviewSchedule: { type: object }
+        withdrawn: { type: boolean }
+        createdAt: { type: string, format: date-time }

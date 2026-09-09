@@ -1,0 +1,18 @@
+<%- include('partials/header') %>
+
+<div class="error-container">
+  <span class="error-icon">⚠️</span>
+  <h1><%= title || 'Something Went Wrong' %></h1>
+  <p><%= message || 'An unexpected error occurred' %></p>
+
+  <% if (error && error.stack) { %>
+    <div class="error-details">
+      <strong style="color:#39FF14;">Error Details:</strong>
+      <pre><%= error.stack %></pre>
+    </div>
+  <% } %>
+
+  <a href="/" class="btn">← Back to Home</a>
+</div>
+
+<%- include('partials/footer') %>

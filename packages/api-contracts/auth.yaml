@@ -1,0 +1,103 @@
+openapi: 3.0.3
+info:
+  title: auth-service
+  version: 1.0.0
+  description: Owns sessions/tokens. Calls users-service, never imports its code.
+servers:
+  - url: http://auth-service:3002
+paths:
+  /auth/signin:
+    post:
+      summary: Sign in
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, minLength: 8 }
+                userType: { type: string, enum: [jobseeker, employer], description: "optional, for role-specific redirect" }
+      responses:
+        '200': { description: Session created, headers: { Set-Cookie: { schema: { type: string } } } }
+        '401': { description: Invalid credentials }
+  /auth/signup:
+    post:
+      summary: Sign up
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password, userType]
+              properties:
+                name: { type: string, minLength: 2 }
+                email: { type: string, format: email }
+                password: { type: string, minLength: 8, description: "must include upper/lower/digit/symbol" }
+                userType: { type: string, enum: [jobseeker, employer] }
+      responses:
+        '201': { description: Created + verification email queued }
+        '409': { description: Email exists }
+  /auth/forgot-password:
+    post:
+      summary: Request password reset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+      responses:
+        '200': { description: Always 200 to avoid enumeration }
+  /auth/reset-password/{token}:
+    post:
+      summary: Reset password with token
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [password, confirmPassword]
+              properties:
+                password: { type: string, minLength: 8 }
+                confirmPassword: { type: string, minLength: 8 }
+      responses:
+        '200': { description: Password reset }
+        '400': { description: Token invalid/expired }
+  /auth/verify-email/{token}:
+    get:
+      summary: Verify email
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Verified }
+        '400': { description: Invalid }
+  /auth/logout:
+    post:
+      summary: Destroy session
+      responses:
+        '200': { description: Logged out }
+
+components:
+  schemas:
+    Session:
+      type: object
+      properties:
+        id: { type: string }
+        user: { $ref: 'users.yaml#/components/schemas/User' }
+        csrfToken: { type: string }

@@ -1,0 +1,201 @@
+openapi: 3.0.3
+info:
+  title: jobs-service
+  version: 1.0.0
+  description: Owns Job + Company (scraped listings + directory). Called by web and applications-service.
+servers:
+  - url: http://jobs-service:3003
+paths:
+  /jobs:
+    get:
+      summary: List jobs (paginated, filtered)
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, minimum: 1, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 50, default: 12 }
+        - name: title
+          in: query
+          schema: { type: string, description: "full-text search" }
+        - name: location
+          in: query
+          schema: { type: string }
+        - name: category
+          in: query
+          schema: { type: string, enum: [Software Development, Design & UI/UX, Data & Analytics, Cybersecurity, Finance & Accounting, Mobile Development, Engineering (Core), Marketing & Sales, Operations & Supply Chain, Human Resources, Product Management, Consulting, Other] }
+        - name: type
+          in: query
+          schema: { type: string, enum: [Full-time, Part-time, Contract, Internship, Temporary] }
+        - name: postedBy
+          in: query
+          schema: { type: string, description: "employer filter for dashboard" }
+        - name: featured
+          in: query
+          schema: { type: boolean }
+      responses:
+        '200':
+          description: Paginated jobs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jobs: { type: array, items: { $ref: '#/components/schemas/Job' } }
+                  pagination: { $ref: '#/components/schemas/Pagination' }
+    post:
+      summary: Create job (employer)
+      security: [{ cookieAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, company, department, location, description, category]
+              properties:
+                title: { type: string, minLength: 5, maxLength: 100 }
+                company: { type: string, maxLength: 100 }
+                companyRef: { type: string, description: "optional Company id" }
+                department: { type: string }
+                location: { type: string }
+                locationType: { type: string, enum: [On-site, Remote, Hybrid] }
+                description: { type: string, minLength: 50, maxLength: 5000 }
+                category: { type: string }
+                employmentType: { type: string }
+                experienceLevel: { type: string, enum: [Entry Level, Mid Level, Senior Level, Executive] }
+                salary: { $ref: '#/components/schemas/Salary' }
+                tags: { type: array, items: { type: string } }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Job' } } } }
+        '401': { description: Not authenticated }
+        '403': { description: Not employer }
+  /jobs/{id}:
+    get:
+      summary: Get job detail (increments views)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Job' } } } }
+        '404': { description: Not found }
+    put:
+      summary: Update job (owner only)
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string }
+                description: { type: string }
+                active: { type: boolean }
+      responses:
+        '200': { description: Updated }
+        '403': { description: Not owner }
+    delete:
+      summary: Archive job (soft delete)
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Archived }
+  /companies:
+    get:
+      summary: List companies (paginated)
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 12 }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  companies: { type: array, items: { $ref: '#/components/schemas/Company' } }
+                  pagination: { $ref: '#/components/schemas/Pagination' }
+  /companies/{slug}:
+    get:
+      summary: Get company by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Company' } } } }
+        '404': { description: Not found }
+
+components:
+  securitySchemes:
+    cookieAuth: { type: apiKey, in: cookie, name: wc.sid }
+  schemas:
+    Job:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        company: { type: string }
+        companyRef: { $ref: '#/components/schemas/Company' }
+        department: { type: string }
+        location: { type: string }
+        locationType: { type: string, enum: [On-site, Remote, Hybrid] }
+        description: { type: string }
+        category: { type: string }
+        employmentType: { type: string }
+        experienceLevel: { type: string }
+        salary: { $ref: '#/components/schemas/Salary' }
+        postedBy: { type: string, description: "User id" }
+        applicants: { type: array, items: { type: object } }
+        views: { type: integer }
+        active: { type: boolean }
+        featured: { type: boolean }
+        tags: { type: array, items: { type: string } }
+        createdAt: { type: string, format: date-time }
+    Company:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        slug: { type: string }
+        logo: { type: string, format: uri }
+        industry: { type: string }
+        employees: { type: string }
+        description: { type: string }
+        website: { type: string, format: uri }
+        featured: { type: boolean }
+        isActive: { type: boolean }
+    Salary:
+      type: object
+      properties:
+        min: { type: number }
+        max: { type: number }
+        currency: { type: string, enum: [USD, EUR, GBP, INR, CAD, AUD] }
+        period: { type: string, enum: [Hourly, Monthly, Yearly] }
+    Pagination:
+      type: object
+      properties:
+        page: { type: integer }
+        limit: { type: integer }
+        total: { type: integer }
+        totalPages: { type: integer }
+        hasPrev: { type: boolean }
+        hasNext: { type: boolean }

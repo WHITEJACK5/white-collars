@@ -1,0 +1,18 @@
+<nav class="navbar">
+  <div class="logo">WHITE <span>COLLARS</span></div>
+  <ul class="nav-links">
+    <li><a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Home</a></li>
+    <li><a href="/jobs" class="<%= currentPath === '/jobs' ? 'active' : '' %>">Jobs</a></li>
+    <li><a href="/companies" class="<%= currentPath === '/companies' ? 'active' : '' %>">Companies</a></li>
+    <li><a href="/about" class="<%= currentPath === '/about' ? 'active' : '' %>">About</a></li>
+    <li><a href="/contact" class="<%= currentPath === '/contact' ? 'active' : '' %>">Contact</a></li>
+  </ul>
+  <% if (user) { %>
+    <div class="user-menu">
+      <span>Welcome, <%= user.name || user.email %></span>
+      <a href="/auth/logout" class="login-btn">Logout</a>
+    </div>
+  <% } else { %>
+    <a href="/auth/signin" class="login-btn">Sign In</a>
+  <% } %>
+</nav>

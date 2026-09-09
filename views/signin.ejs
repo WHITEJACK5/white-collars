@@ -1,0 +1,41 @@
+<%- include('partials/header') %>
+
+<div class="auth-page">
+  <div class="auth-container">
+    <h1>Sign In</h1>
+    <p>Welcome back to WHITE COLLARS</p>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="error-message"><%= error %></div>
+    <% } %>
+    <% if (typeof success !== 'undefined' && success) { %>
+      <div class="success-message"><%= success %></div>
+    <% } %>
+
+    <form action="/auth/signin" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required placeholder="Enter your password" minlength="8">
+      </div>
+      <div class="form-group">
+        <label for="role">Account Type</label>
+        <select id="role" name="role" required>
+          <option value="jobseeker">Job Seeker</option>
+          <option value="employer">Employer / Recruiter</option>
+        </select>
+      </div>
+      <button type="submit" class="btn">Sign In</button>
+    </form>
+
+    <p class="auth-footer" style="margin-top:1.5rem;">
+      Don't have an account? <a href="/auth/signup">Sign Up</a>
+    </p>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

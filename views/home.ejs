@@ -1,0 +1,67 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<div class="hero">
+  <div class="hero-content">
+    <h1>Find Your <span>Dream Job</span></h1>
+    <p>Connect with top companies and discover amazing career opportunities in the tech industry</p>
+    <a href="/jobs" class="btn">Browse Jobs</a>
+    <a href="/companies" class="btn-outline">View Companies</a>
+  </div>
+</div>
+
+<section class="content-section">
+  <div class="container">
+    <h2 class="section-title">Our Impact</h2>
+    <div class="stats-section">
+      <div class="stats-grid">
+        <div class="card stat-item">
+          <div class="stat-number">50K+</div>
+          <div class="stat-label">Active Job Seekers</div>
+        </div>
+        <div class="card stat-item">
+          <div class="stat-number">5K+</div>
+          <div class="stat-label">Companies Trust Us</div>
+        </div>
+        <div class="card stat-item">
+          <div class="stat-number">25K+</div>
+          <div class="stat-label">Jobs Posted Monthly</div>
+        </div>
+        <div class="card stat-item">
+          <div class="stat-number">95%</div>
+          <div class="stat-label">Success Rate</div>
+        </div>
+      </div>
+    </div>
+
+    <% if (jobs && jobs.length > 0) { %>
+      <h2 class="section-title">Featured Jobs</h2>
+      <div class="jobs-grid">
+        <% jobs.forEach(job => { %>
+          <div class="job-card">
+            <h3><%= job.title %></h3>
+            <div class="job-company"><%= job.company %></div>
+            <div class="job-location"><%= job.location %></div>
+            <div class="job-description"><%= job.description.substring(0, 150) %>...</div>
+            <a href="/jobs/<%= job._id %>" class="apply-btn">View Details</a>
+          </div>
+        <% }); %>
+      </div>
+    <% } %>
+
+    <% if (companies && companies.length > 0) { %>
+      <h2 class="section-title">Featured Companies</h2>
+      <div class="grid grid-4">
+        <% companies.forEach(company => { %>
+          <div class="card" style="text-align:center;">
+            <div style="font-size:2.5rem; margin-bottom:1rem;"><%= company.name.charAt(0) %></div>
+            <h3 style="border:none;"><%= company.name %></h3>
+            <div class="job-company"><%= company.industry %></div>
+          </div>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

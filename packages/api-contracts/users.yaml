@@ -1,0 +1,105 @@
+openapi: 3.0.3
+info:
+  title: users-service
+  version: 1.0.0
+  description: Owns User model. No other service may import its code — only this contract via HTTP.
+servers:
+  - url: http://users-service:3001
+    description: internal (K8s DNS or docker-compose)
+paths:
+  /users:
+    post:
+      summary: Create user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password, userType]
+              properties:
+                name: { type: string, minLength: 2, maxLength: 100 }
+                email: { type: string, format: email }
+                password: { type: string, minLength: 8, description: "plain text, hashed server-side" }
+                userType: { type: string, enum: [jobseeker, employer] }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/User' } } } }
+        '409': { description: Email already exists }
+    get:
+      summary: Find user by email (internal, auth-service)
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema: { type: string, format: email }
+      responses:
+        '200': { description: Found, content: { application/json: { schema: { $ref: '#/components/schemas/User' } } } }
+        '404': { description: Not found }
+  /users/{id}:
+    get:
+      summary: Get user by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/User' } } } }
+        '404': { description: Not found }
+    patch:
+      summary: Update user (profile, verify, reset)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                emailVerified: { type: boolean }
+                passwordResetToken: { type: string, nullable: true }
+                passwordResetExpires: { type: string, format: date-time, nullable: true }
+                emailVerifyToken: { type: string, nullable: true }
+                emailVerifyExpires: { type: string, format: date-time, nullable: true }
+                isActive: { type: boolean }
+      responses:
+        '200': { description: Updated }
+  /users/{id}/verify-password:
+    post:
+      summary: Verify password (internal — compares hash, does not return password)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [password]
+              properties:
+                password: { type: string }
+      responses:
+        '200': { description: Valid, content: { application/json: { schema: { type: object, properties: { valid: { type: boolean } } } } } }
+        '401': { description: Invalid }
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        email: { type: string, format: email }
+        userType: { type: string, enum: [jobseeker, employer] }
+        isActive: { type: boolean }
+        emailVerified: { type: boolean }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+      required: [id, name, email, userType]

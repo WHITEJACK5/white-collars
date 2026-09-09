@@ -1,0 +1,115 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <h1><%= job ? 'Edit Job' : 'Post a Job' %></h1>
+    <p><%= job ? 'Update the posting details' : 'Reach 50k+ active job seekers' %></p>
+  </div>
+</div>
+
+<section class="content-section">
+  <div class="container" style="max-width:800px;">
+    <div class="card">
+      <form action="<%= formAction %>" method="<%= formMethod %>" style="text-align:left;">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="form-group">
+          <label for="title">Job Title *</label>
+          <input id="title" name="title" required minlength="5" maxlength="100" value="<%= job ? job.title : '' %>" placeholder="Senior Software Engineer">
+        </div>
+        <div class="form-group">
+          <label for="company">Company Display Name *</label>
+          <input id="company" name="company" required maxlength="100" value="<%= job ? job.company : '' %>" placeholder="Acme Corp">
+        </div>
+        <div class="form-group">
+          <label for="companyRef">Company (link to directory)</label>
+          <select id="companyRef" name="companyRef">
+            <option value="">-- No link --</option>
+            <% (companies || []).forEach(c => { %>
+              <option value="<%= c._id %>" <%= job && String(job.companyRef)===String(c._id) ? 'selected' : '' %>><%= c.name %> — <%= c.industry %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div class="form-group">
+            <label for="department">Department *</label>
+            <input id="department" name="department" required value="<%= job ? job.department : '' %>" placeholder="Engineering">
+          </div>
+          <div class="form-group">
+            <label for="category">Category *</label>
+            <select id="category" name="category" required>
+              <option value="">Select…</option>
+              <% ['Software Development','Design & UI/UX','Data & Analytics','Cybersecurity','Finance & Accounting','Mobile Development','Engineering (Core)','Marketing & Sales','Operations & Supply Chain','Human Resources','Product Management','Consulting','Other'].forEach(cat => { %>
+                <option value="<%= cat %>" <%= job && job.category===cat ? 'selected' : '' %>><%= cat %></option>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div class="form-group">
+            <label for="location">Location *</label>
+            <input id="location" name="location" required value="<%= job ? job.location : '' %>" placeholder="Bengaluru, India">
+          </div>
+          <div class="form-group">
+            <label for="locationType">Location Type</label>
+            <select id="locationType" name="locationType">
+              <option value="On-site" <%= job && job.locationType==='On-site' ? 'selected' : '' %>>On-site</option>
+              <option value="Remote" <%= job && job.locationType==='Remote' ? 'selected' : '' %>>Remote</option>
+              <option value="Hybrid" <%= job && job.locationType==='Hybrid' ? 'selected' : '' %>>Hybrid</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="description">Description * (50–5000 chars)</label>
+          <textarea id="description" name="description" required minlength="50" maxlength="5000" rows="6" placeholder="Describe the role, impact, and why it matters..."><%= job ? job.description : '' %></textarea>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+          <div class="form-group">
+            <label for="employmentType">Employment Type</label>
+            <select id="employmentType" name="employmentType">
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Contract">Contract</option>
+              <option value="Internship">Internship</option>
+              <option value="Temporary">Temporary</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="experienceLevel">Experience</label>
+            <select id="experienceLevel" name="experienceLevel">
+              <option value="Entry Level">Entry Level</option>
+              <option value="Mid Level">Mid Level</option>
+              <option value="Senior Level">Senior Level</option>
+              <option value="Executive">Executive</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="salaryCurrency">Currency</label>
+            <select id="salaryCurrency" name="salaryCurrency">
+              <option value="INR">INR</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div class="form-group">
+            <label for="salaryMin">Salary Min</label>
+            <input id="salaryMin" name="salaryMin" type="number" min="0" value="<%= job && job.salary ? job.salary.min : '' %>">
+          </div>
+          <div class="form-group">
+            <label for="salaryMax">Salary Max</label>
+            <input id="salaryMax" name="salaryMax" type="number" min="0" value="<%= job && job.salary ? job.salary.max : '' %>">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="tags">Tags (comma separated)</label>
+          <input id="tags" name="tags" value="<%= job && job.tags ? job.tags.join(', ') : '' %>" placeholder="engineering, backend, cloud">
+        </div>
+
+        <button type="submit" class="btn" style="width:100%; margin-top:1rem;"><%= job ? 'Save Changes' : 'Post Job' %></button>
+        <a href="/employer/dashboard" class="btn-outline" style="display:block; text-align:center; margin-top:0.8rem;">Cancel</a>
+      </form>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

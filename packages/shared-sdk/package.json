@@ -1,0 +1,20 @@
+{
+  "name": "@white-collars/shared-sdk",
+  "version": "1.0.0",
+  "description": "Platform SDK — logging, tracing, auth client, DB, shared middleware. ONLY shared code allowed across services.",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./db": "./src/db.js",
+    "./errors": "./src/errors.js",
+    "./security": "./src/security.js",
+    "./csrf": "./src/csrf.js",
+    "./auth": "./src/auth.js"
+  },
+  "scripts": {
+    "build": "echo 'no build'",
+    "test": "echo 'no tests yet' && exit 0",
+    "lint": "echo 'lint ok'"
+  },
+  "publishConfig": { "access": "public" }
+}

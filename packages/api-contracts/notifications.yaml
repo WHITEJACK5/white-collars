@@ -1,0 +1,36 @@
+openapi: 3.0.3
+info:
+  title: notifications-service
+  version: 1.0.0
+  description: Internal only — called by auth-service (verify/reset) and applications-service (status change). Not exposed via gateway.
+servers:
+  - url: http://notifications-service:3005
+paths:
+  /notifications/email:
+    post:
+      summary: Send email (internal)
+      security: [{ internalToken: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [to, subject, template]
+              properties:
+                to: { type: string, format: email }
+                subject: { type: string }
+                template: { type: string, enum: [verify-email, reset-password, application-status, contact-received] }
+                vars:
+                  type: object
+                  additionalProperties: true
+                  example:
+                    verifyUrl: "https://app.example.com/auth/verify-email/abc"
+                    jobTitle: "Senior SWE"
+      responses:
+        '202': { description: Queued }
+        '400': { description: Invalid }
+
+components:
+  securitySchemes:
+    internalToken: { type: apiKey, in: header, name: X-Internal-Token }

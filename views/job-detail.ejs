@@ -1,0 +1,117 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <h1><%= job.title %></h1>
+    <p><%= job.company %> | <%= job.location %></p>
+  </div>
+</div>
+
+<section class="content-section">
+  <div class="container">
+    <div style="max-width:900px; margin:0 auto;">
+      <div class="job-card">
+        <h3><%= job.title %></h3>
+        <div class="job-company"><%= job.company %> <% if (job.companyRef && job.companyRef.name) { %> • <%= job.companyRef.name %><% } %></div>
+        <div class="job-location"><%= job.location %> | <%= job.locationType %> | <%= job.employmentType %> | <%= job.experienceLevel %> • <%= job.views %> views</div>
+        <div style="margin:1.5rem 0;">
+          <span class="category-count"><%= job.category %></span>
+          <% if (job.salary && (job.salary.min || job.salary.max)) { %>
+            <span class="category-count" style="margin-left:0.5rem;"><%= job.salary.currency %> <%= job.salary.min || '' %> - <%= job.salary.max || '' %> <%= job.salary.period %></span>
+          <% } %>
+        </div>
+        <p style="color:#aaa; line-height:1.8; margin-bottom:2rem;"><%= job.description %></p>
+
+        <% if (job.skills && job.skills.length > 0) { %>
+          <div style="margin-bottom:1.5rem;">
+            <strong style="color:#39FF14;">Skills:</strong>
+            <div style="margin-top:0.5rem;">
+              <% job.skills.forEach(skill => { %>
+                <span class="category-count" style="margin-right:0.5rem;"><%= skill %></span>
+              <% }); %>
+            </div>
+          </div>
+        <% } %>
+
+        <% if (job.requirements && job.requirements.length > 0) { %>
+          <div style="margin-bottom:1.5rem;">
+            <strong style="color:#39FF14;">Requirements:</strong>
+            <ul style="color:#aaa; line-height:2; padding-left:1.5rem; margin-top:0.5rem;">
+              <% job.requirements.forEach(r => { %>
+                <li><%= r %></li>
+              <% }); %>
+            </ul>
+          </div>
+        <% } %>
+
+        <% if (job.responsibilities && job.responsibilities.length > 0) { %>
+          <div style="margin-bottom:2rem;">
+            <strong style="color:#39FF14;">Responsibilities:</strong>
+            <ul style="color:#aaa; line-height:2; padding-left:1.5rem; margin-top:0.5rem;">
+              <% job.responsibilities.forEach(r => { %>
+                <li><%= r %></li>
+              <% }); %>
+            </ul>
+          </div>
+        <% } %>
+
+        <% if (typeof user !== 'undefined' && user && job.postedBy && String(job.postedBy._id || job.postedBy) === String(user.id)) { %>
+          <div class="card" style="background:#111; border-color:#39FF14; margin-bottom:1.5rem; padding:1.2rem;">
+            <strong style="color:#39FF14;">You posted this job</strong>
+            <div style="margin-top:0.8rem; display:flex; gap:0.6rem; flex-wrap:wrap;">
+              <a href="/jobs/<%= job._id %>/edit" class="btn-outline btn-sm">Edit</a>
+              <a href="/employer/jobs/<%= job._id %>/applicants" class="btn btn-sm">View Applicants (<%= job.applicants ? job.applicants.length : 0 %>)</a>
+            </div>
+          </div>
+        <% } else if (typeof user !== 'undefined' && user) { %>
+          <div class="card" style="background:#111; border:1px solid #333; padding:1.5rem; margin-bottom:1rem;">
+            <h3 style="border:none; margin-bottom:1rem;">One-Click Apply</h3>
+            <p class="text-muted" style="font-size:0.9rem; margin-bottom:1rem;">Your saved profile will be submitted. Video upload will be mandatory for certain roles — you’ll be prompted if required.</p>
+            <form action="/jobs/<%= job._id %>/apply" method="POST" enctype="multipart/form-data">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <div class="form-group">
+                <label for="coverLetter">Cover Letter (optional)</label>
+                <textarea id="coverLetter" name="coverLetter" rows="4" maxlength="2000" placeholder="Briefly explain why you're a great fit..."></textarea>
+              </div>
+              <div class="form-group">
+                <label for="resume">Resume (PDF/DOC, max 5MB)</label>
+                <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx">
+              </div>
+              <div class="form-group">
+                <label for="video">Intro Video (optional — MP4/MOV/WebM, max 50MB) — <span style="color:#39FF14;">planned mandatory for select roles</span></label>
+                <input type="file" id="video" name="video" accept=".mp4,.mov,.webm,.mkv">
+              </div>
+              <button type="submit" class="btn" style="width:100%;">Submit Application</button>
+            </form>
+          </div>
+        <% } else { %>
+          <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1rem;">
+            <a href="/auth/signin" class="btn">Sign In to Apply</a>
+            <a href="/jobs" class="btn-outline">Back to Jobs</a>
+          </div>
+        <% } %>
+
+        <% if (!user) { %>
+          <a href="/jobs" class="btn-outline btn-sm" style="margin-top:0.5rem;">Back to Jobs</a>
+        <% } %>
+      </div>
+
+      <% if (relatedJobs && relatedJobs.length > 0) { %>
+        <h2 class="section-title" style="margin-top:4rem;">Related Jobs</h2>
+        <div class="jobs-grid">
+          <% relatedJobs.forEach(j => { %>
+            <div class="job-card">
+              <h3><%= j.title %></h3>
+              <div class="job-company"><%= j.company %></div>
+              <div class="job-location"><%= j.location %></div>
+              <a href="/jobs/<%= j._id %>" class="apply-btn">View Details</a>
+            </div>
+          <% }); %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

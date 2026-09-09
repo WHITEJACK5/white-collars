@@ -1,0 +1,42 @@
+{
+  "name": "white-collars-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "WHITE COLLARS — monorepo (Turborepo) — Stage 3",
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "dev": "turbo run dev",
+    "dev:web": "npm --workspace apps/web run dev",
+    "seed": "node seed.js"
+  },
+  "engines": {
+    "node": "22.x"
+  },
+  "keywords": ["job-portal", "monorepo", "turborepo"],
+  "license": "MIT",
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-mongo": "^5.1.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.6.1",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.18.2",
+    "express-validator": "^7.2.1",
+    "method-override": "^3.0.0",
+    "mongoose": "^8.19.1",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.0"
+  }
+}

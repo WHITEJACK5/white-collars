@@ -1,0 +1,60 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <h1>Employer Dashboard</h1>
+    <p>Manage your postings and applicants</p>
+  </div>
+</div>
+
+<section class="content-section">
+  <div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; flex-wrap:wrap; gap:1rem;">
+      <div class="stats-grid" style="flex:1;">
+        <div class="stat-item card" style="padding:1.5rem;">
+          <div class="stat-number" style="font-size:2rem;"><%= stats.totalJobs %></div>
+          <div class="stat-label">Active Postings</div>
+        </div>
+        <div class="stat-item card" style="padding:1.5rem;">
+          <div class="stat-number" style="font-size:2rem;"><%= stats.totalApplicants %></div>
+          <div class="stat-label">Total Applicants</div>
+        </div>
+      </div>
+      <a href="/jobs/new/post" class="btn">+ Post New Job</a>
+    </div>
+
+    <% if (!jobs || jobs.length===0) { %>
+      <div class="card" style="text-align:center; padding:4rem;">
+        <h3 style="border:none;">No postings yet</h3>
+        <p class="text-muted">Create your first job to start receiving applications.</p>
+        <a href="/jobs/new/post" class="btn" style="margin-top:1rem;">Post a Job</a>
+      </div>
+    <% } else { %>
+      <div class="jobs-grid">
+        <% jobs.forEach(job => { %>
+          <div class="job-card">
+            <h3><%= job.title %></h3>
+            <div class="job-company"><%= job.company %> • <%= job.location %></div>
+            <div class="job-location"><%= job.category %> • <%= job.employmentType %> • <%= job.views %> views</div>
+            <div style="margin:1rem 0;">
+              <span class="category-count"><%= job.active ? 'Active' : 'Archived' %></span>
+              <span class="category-count" style="margin-left:0.5rem;"><%= job.applicants ? job.applicants.length : 0 %> applicants</span>
+            </div>
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+              <a href="/jobs/<%= job._id %>" class="apply-btn">View</a>
+              <a href="/jobs/<%= job._id %>/edit" class="btn-outline btn-sm">Edit</a>
+              <a href="/employer/jobs/<%= job._id %>/applicants" class="btn-outline btn-sm">Applicants</a>
+              <form action="/jobs/<%= job._id %>?_method=DELETE" method="POST" style="display:inline;" onsubmit="return confirm('Archive this job?');">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" class="btn-outline btn-sm" style="color:#ff4444; border-color:#ff4444;">Archive</button>
+              </form>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
