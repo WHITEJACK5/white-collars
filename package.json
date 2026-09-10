@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "packageManager": "npm@11.14.1",
-  "description": "WHITE COLLARS — monorepo (Turborepo) — Stage 3",
+  "description": "WHITE COLLARS — monorepo (Turborepo) — Stage 3 — Latest Stack: Node 22 + Express 5 + Mongoose 8 + EJS 3 + Turborepo 2",
   "workspaces": [
     "apps/*",
     "services/*",
@@ -20,19 +20,19 @@
   "engines": {
     "node": "22.x"
   },
-  "keywords": ["job-portal", "monorepo", "turborepo"],
+  "keywords": ["job-portal", "monorepo", "turborepo", "rag", "vector-search"],
   "license": "MIT",
   "devDependencies": {
-    "turbo": "^2.0.0",
+    "turbo": "^2.10.12",
     "nodemon": "^3.1.10"
   },
   "dependencies": {
-    "bcryptjs": "^2.4.3",
+    "bcryptjs": "^3.0.3",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.7",
-    "dotenv": "^16.6.1",
+    "dotenv": "^17.4.2",
     "ejs": "^3.1.10",
-    "express": "^4.21.2",
+    "express": "^4.22.2",
     "express-session": "^1.18.2",
     "express-validator": "^7.2.1",
     "method-override": "^3.0.0",

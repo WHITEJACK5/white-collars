@@ -4,9 +4,12 @@ const pagesService = require('./service');
 
 exports.home = async (req, res, next) => {
   try {
-    const { jobs } = await jobsService.list({ active: true, featured: true }, { limit: 6, skip: 0 });
+    const [{ jobs }, companies] = await Promise.all([
+      jobsService.list({ active: true, featured: true }, { limit: 6, skip: 0 }),
+      companiesService.listActive({}, { limit: 6, skip: 0 }).catch(() => []),
+    ]);
     const stats = { activeJobSeekers: '50K+', companiesTrustUs: '5K+', jobsPostedMonthly: '25K+', successRate: '95%' };
-    res.render('home', { title: 'WHITE COLLARS - Find Your Dream Job', jobs, stats });
+    res.render('home', { title: 'WHITE COLLARS - Find Your Dream Job', jobs, companies, stats });
   } catch (err) { next(err); }
 };
 
