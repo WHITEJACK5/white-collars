@@ -19,7 +19,7 @@ for (const [path, target] of Object.entries(targets)) {
 
 app.get('/health', (req, res) => res.json({ status: 'ok', gateway: true }));
 
-const PORT = process.env.GATEWAY_PORT || 3000;
+const PORT = process.env.GATEWAY_PORT || 3005;
 if (require.main === module) {
   app.listen(PORT, () => console.log(`api-gateway listening on ${PORT}`));
 }

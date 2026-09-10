@@ -13,7 +13,8 @@
     "build": "turbo run build",
     "test": "turbo run test",
     "lint": "turbo run lint",
-    "dev": "turbo run dev",
+    "dev": "nodemon server.js",
+    "dev:all": "turbo run dev",
     "dev:web": "npm --workspace apps/web run dev",
     "seed": "node seed.js"
   },
