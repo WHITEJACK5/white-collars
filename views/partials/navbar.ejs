@@ -1,18 +1,45 @@
-<nav class="navbar">
-  <div class="logo">WHITE <span>COLLARS</span></div>
-  <ul class="nav-links">
-    <li><a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Home</a></li>
-    <li><a href="/jobs" class="<%= currentPath === '/jobs' ? 'active' : '' %>">Jobs</a></li>
-    <li><a href="/companies" class="<%= currentPath === '/companies' ? 'active' : '' %>">Companies</a></li>
-    <li><a href="/about" class="<%= currentPath === '/about' ? 'active' : '' %>">About</a></li>
-    <li><a href="/contact" class="<%= currentPath === '/contact' ? 'active' : '' %>">Contact</a></li>
-  </ul>
-  <% if (user) { %>
-    <div class="user-menu">
-      <span>Welcome, <%= user.name || user.email %></span>
-      <a href="/auth/logout" class="login-btn">Logout</a>
+<header class="header">
+  <div class="container header-inner">
+    <a href="/" class="logo">
+      <div class="logo-mark">W</div>
+      <div class="logo-type">WHITE <span>COLLARS</span></div>
+    </a>
+    <nav class="nav" id="nav">
+      <a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Home</a>
+      <a href="/jobs" class="<%= currentPath && currentPath.startsWith('/jobs') ? 'active' : '' %>">Jobs</a>
+      <a href="/companies" class="<%= currentPath && currentPath.startsWith('/companies') ? 'active' : '' %>">Companies</a>
+      <a href="/about" class="<%= currentPath === '/about' ? 'active' : '' %>">About</a>
+      <a href="/contact" class="<%= currentPath === '/contact' ? 'active' : '' %>">Contact</a>
+      <% if (user) { %>
+        <a href="/employer/dashboard" class="<%= currentPath && currentPath.startsWith('/employer') ? 'active' : '' %>">Dashboard</a>
+      <% } %>
+    </nav>
+    <div class="header-cta">
+      <% if (user) { %>
+        <span class="badge badge-white" style="border-color:var(--black)"><%= user.name || user.email %></span>
+        <a href="/auth/logout" class="btn btn-ghost btn-sm">Logout</a>
+      <% } else { %>
+        <a href="/auth/signin" class="btn btn-ghost btn-sm" id="navSignin">Log In</a>
+        <a href="/auth/signup" class="btn btn-primary btn-sm">Register — Free</a>
+      <% } %>
+      <button class="hamburger" id="ham" aria-label="Menu">☰</button>
     </div>
-  <% } else { %>
-    <a href="/auth/signin" class="login-btn">Sign In</a>
-  <% } %>
-</nav>
+  </div>
+</header>
+<script>
+  document.getElementById('ham')?.addEventListener('click', () => {
+    const nav = document.getElementById('nav');
+    nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+    nav.style.flexDirection = 'column';
+    nav.style.position = 'absolute';
+    nav.style.top = '68px';
+    nav.style.left = '16px';
+    nav.style.right = '16px';
+    nav.style.background = 'white';
+    nav.style.border = '1.5px solid var(--black)';
+    nav.style.borderRadius = '16px';
+    nav.style.padding = '12px';
+    nav.style.boxShadow = '6px 6px 0 var(--black)';
+    nav.style.zIndex = '60';
+  });
+</script>

@@ -2,8 +2,8 @@
 
 <div class="auth-page">
   <div class="auth-container">
-    <h1>Sign Up</h1>
-    <p>Join WHITE COLLARS today</p>
+    <h1>Create account</h1>
+    <p>Join WHITE COLLARS — Grid White • Black • Neon Green • Secure</p>
 
     <% if (typeof error !== 'undefined' && error) { %>
       <div class="error-message"><%= error %></div>
@@ -12,35 +12,35 @@
       <div class="success-message"><%= success %></div>
     <% } %>
 
-    <form action="/auth/signup" method="POST">
+    <form action="/auth/signup" method="POST" style="display:grid;gap:12px;text-align:left">
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <div class="form-group">
-        <label for="name">Full Name</label>
-        <input type="text" id="name" name="name" required placeholder="John Doe">
+      <div class="field">
+        <label>Full Name *</label>
+        <input type="text" name="name" required placeholder="John Doe" autocomplete="name">
       </div>
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" required placeholder="you@example.com">
+      <div class="field">
+        <label>Email Address *</label>
+        <input type="email" name="email" required placeholder="you@whitecollars.com" autocomplete="email">
       </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required placeholder="Create a strong password" minlength="8">
-        <small class="text-muted" style="font-size:0.8rem;">Min 8 chars, must include uppercase, lowercase, number, and symbol</small>
+      <div class="field">
+        <label>Password *</label>
+        <input type="password" name="password" required placeholder="Min 8 chars, upper + lower + number + symbol" minlength="8" autocomplete="new-password">
+        <div style="font-size:11px;color:#666;margin-top:4px">Min 8 chars • Must include uppercase, lowercase, number, and symbol</div>
       </div>
-      <div class="form-group">
-        <label for="userType">I am a:</label>
-        <select id="userType" name="userType" required>
-          <option value="">Select your role...</option>
+      <div class="field">
+        <label>I am a *</label>
+        <select name="userType" required>
+          <option value="">Select your role…</option>
           <option value="jobseeker">Job Seeker</option>
           <option value="employer">Employer / Recruiter</option>
         </select>
       </div>
-      <button type="submit" class="btn">Create Account</button>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Create Account →</button>
     </form>
 
-    <p class="auth-footer" style="margin-top:1.5rem;">
-      Already have an account? <a href="/auth/signin">Sign In</a>
-    </p>
+    <div style="text-align:center;margin-top:14px;font-size:13px;color:#666">
+      Already have an account? <a href="/auth/signin" style="color:var(--black);font-weight:800;text-decoration:underline">Log In</a>
+    </div>
   </div>
 </div>
 

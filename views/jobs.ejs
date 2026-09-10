@@ -1,59 +1,74 @@
 <%- include('partials/header') %>
 <%- include('partials/navbar') %>
 
-<div class="page-header">
-  <div class="page-header-content">
-    <h1>Browse Jobs</h1>
-    <p>Explore diverse career opportunities across industries</p>
+<section class="hero" style="padding:32px 0 16px">
+  <div class="container" style="text-align:center;max-width:760px">
+    <span class="badge badge-neon">25K+ Jobs Monthly</span>
+    <h1 style="font-size:42px;margin-top:10px">Browse <span class="neon">Jobs</span></h1>
+    <p style="margin:8px auto 0">Explore diverse career opportunities across industries — filter by title, location, category.</p>
   </div>
-</div>
+</section>
 
-<section class="job-listings">
+<section class="section" style="padding-top:0">
   <div class="container">
-    <form method="GET" action="/jobs" style="display:flex; gap:1rem; margin-bottom:2rem; flex-wrap:wrap; background:#000; border:1px solid #39FF14; padding:1.2rem; border-radius:8px;">
-      <input type="text" name="title" placeholder="Job title or keyword" value="<%= (filters && filters.title) || '' %>" style="flex:1; min-width:160px; padding:0.8rem; background:#111; border:1px solid #333; color:#e0e0e0; border-radius:4px;">
-      <input type="text" name="location" placeholder="Location" value="<%= (filters && filters.location) || '' %>" style="flex:1; min-width:140px; padding:0.8rem; background:#111; border:1px solid #333; color:#e0e0e0; border-radius:4px;">
-      <select name="category" style="padding:0.8rem; background:#111; border:1px solid #333; color:#e0e0e0; border-radius:4px;">
-        <option value="">All categories</option>
-        <% (categories || []).forEach(cat => { %>
-          <option value="<%= cat %>" <%= filters && filters.category===cat ? 'selected' : '' %>><%= cat %></option>
-        <% }) %>
-      </select>
-      <button type="submit" class="btn btn-sm">Search</button>
+    <form method="GET" action="/jobs" class="card" style="padding:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:18px">
+      <div class="field" style="flex:1;min-width:160px">
+        <label>Job title or keyword</label>
+        <input type="text" name="title" placeholder="e.g. Software Engineer" value="<%= (filters && filters.title) || '' %>">
+      </div>
+      <div class="field" style="flex:1;min-width:140px">
+        <label>Location</label>
+        <input type="text" name="location" placeholder="e.g. Bengaluru" value="<%= (filters && filters.location) || '' %>">
+      </div>
+      <div class="field" style="min-width:160px">
+        <label>Category</label>
+        <select name="category">
+          <option value="">All categories</option>
+          <% (categories || []).forEach(cat => { %>
+            <option value="<%= cat %>" <%= filters && filters.category===cat ? 'selected' : '' %>><%= cat %></option>
+          <% }) %>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Search</button>
+      <a href="/jobs" class="btn btn-ghost">Reset</a>
     </form>
 
     <div class="jobs-grid">
       <% jobs.forEach(job => { %>
         <div class="job-card">
           <h3><%= job.title %></h3>
-          <div class="job-company"><%= job.company %> <% if (job.companyRef && job.companyRef.name) { %> • <%= job.companyRef.name %><% } %></div>
-          <div class="job-location"><%= job.location %> | <%= job.employmentType %></div>
-          <div class="job-description"><%= job.description.substring(0, 150) %>...</div>
-          <div style="margin-bottom:1rem;">
-            <span class="category-count"><%= job.category %></span>
-            <span class="category-count" style="margin-left:0.5rem;"><%= job.experienceLevel %></span>
+          <div class="job-company"><%= job.company %></div>
+          <div class="job-location"><%= job.location %> • <%= job.employmentType || 'Full-time' %></div>
+          <div class="job-description"><%= job.description ? job.description.substring(0, 130) + '...' : '' %></div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+            <span class="badge badge-white"><%= job.category %></span>
+            <span class="badge badge-white"><%= job.experienceLevel || 'Mid Level' %></span>
           </div>
-          <a href="/jobs/<%= job._id %>" class="apply-btn">View Details</a>
+          <div style="display:flex;gap:8px">
+            <a href="/jobs/<%= job._id %>" class="btn btn-primary btn-sm" style="flex:1;justify-content:center">View Details →</a>
+            <a href="/jobs/<%= job._id %>" class="btn btn-ghost btn-sm">Apply</a>
+          </div>
         </div>
-      <% }); %>
+      <% }) %>
     </div>
 
     <% if (typeof pagination !== 'undefined' && pagination && pagination.totalPages > 1) { %>
-      <div style="display:flex; justify-content:center; gap:0.6rem; margin-top:2.5rem; flex-wrap:wrap;">
+      <div class="pagination">
         <% if (pagination.hasPrev) { %>
-          <a href="?page=<%= pagination.page - 1 %>&limit=<%= pagination.limit %><%= filters && filters.title ? '&title='+encodeURIComponent(filters.title) : '' %><%= filters && filters.location ? '&location='+encodeURIComponent(filters.location) : '' %><%= filters && filters.category ? '&category='+encodeURIComponent(filters.category) : '' %>" class="btn-outline btn-sm">← Prev</a>
+          <a href="?page=<%= pagination.page - 1 %>&limit=<%= pagination.limit %><%= filters && filters.title ? '&title='+encodeURIComponent(filters.title) : '' %><%= filters && filters.location ? '&location='+encodeURIComponent(filters.location) : '' %><%= filters && filters.category ? '&category='+encodeURIComponent(filters.category) : '' %>">← Prev</a>
         <% } %>
-        <span class="category-count" style="padding:0.6rem 1rem;">Page <%= pagination.page %> of <%= pagination.totalPages %> • <%= pagination.total %> jobs</span>
+        <span class="badge badge-black">Page <%= pagination.page %> of <%= pagination.totalPages %> • <%= pagination.total %> jobs</span>
         <% if (pagination.hasNext) { %>
-          <a href="?page=<%= pagination.page + 1 %>&limit=<%= pagination.limit %><%= filters && filters.title ? '&title='+encodeURIComponent(filters.title) : '' %><%= filters && filters.location ? '&location='+encodeURIComponent(filters.location) : '' %><%= filters && filters.category ? '&category='+encodeURIComponent(filters.category) : '' %>" class="btn btn-sm">Next →</a>
+          <a href="?page=<%= pagination.page + 1 %>&limit=<%= pagination.limit %><%= filters && filters.title ? '&title='+encodeURIComponent(filters.title) : '' %><%= filters && filters.location ? '&location='+encodeURIComponent(filters.location) : '' %><%= filters && filters.category ? '&category='+encodeURIComponent(filters.category) : '' %>">Next →</a>
         <% } %>
       </div>
     <% } %>
 
     <% if (!jobs || jobs.length === 0) { %>
-      <div class="card" style="text-align:center; padding:4rem;">
-        <h3 style="border:none;">No jobs found</h3>
-        <p class="text-muted" style="margin-top:1rem;">Try adjusting filters or check back later.</p>
+      <div class="card" style="text-align:center;padding:32px;max-width:560px;margin:18px auto 0">
+        <h3>No jobs found</h3>
+        <p style="color:#666;font-size:13px;margin-top:6px">Try adjusting filters or check back later.</p>
+        <a href="/jobs" class="btn btn-dark" style="margin-top:12px">Clear filters</a>
       </div>
     <% } %>
   </div>

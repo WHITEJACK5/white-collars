@@ -1,41 +1,53 @@
 <%- include('partials/header') %>
 <%- include('partials/navbar') %>
 
-<div class="page-header">
-  <div class="page-header-content">
-    <h1>Top Companies</h1>
-    <p>Leading companies hiring on WHITE COLLARS</p>
+<section class="hero" style="padding:32px 0 16px">
+  <div class="container" style="text-align:center;max-width:760px">
+    <span class="badge badge-neon">5K+ Companies Trust Us</span>
+    <h1 style="font-size:42px;margin-top:10px">Top <span class="neon">Companies</span></h1>
+    <p style="margin:8px auto 0">Leading companies hiring on WHITE COLLARS — click to explore openings.</p>
   </div>
-</div>
+</section>
 
-<section class="content-section">
+<section class="section" style="padding-top:0">
   <div class="container">
-    <h2 class="section-title">Featured Companies</h2>
-    <div class="companies-table-container">
-      <table class="companies-table">
-        <tbody>
-          <% 
-          const chunkSize = 5;
-          for(let i = 0; i < companies.length; i += chunkSize) {
-            const chunk = companies.slice(i, i + chunkSize);
-          %>
-            <tr>
-              <% chunk.forEach(company => { %>
-                <td onclick="window.location.href='/companies/<%= company._id %>'">
-                  <img src="<%= company.logo %>" class="company-img" alt="<%= company.name %>" onerror="this.src='https://placehold.co/48x48?text=LOGO'">
-                  <div class="company-name"><%= company.name %></div>
-                </td>
-              <% }) %>
-            </tr>
-          <% } %>
-        </tbody>
-      </table>
-    </div>
+    <table class="companies-table">
+      <tbody>
+        <% 
+        const chunkSize = 5;
+        for(let i = 0; i < companies.length; i += chunkSize) {
+          const chunk = companies.slice(i, i + chunkSize);
+        %>
+          <tr>
+            <% chunk.forEach(company => { %>
+              <td onclick="window.location.href='/companies/<%= company.slug || company._id %>'" title="View <%= company.name %>">
+                <img src="<%= company.logo %>" class="company-img" alt="<%= company.name %>" onerror="this.src='https://placehold.co/48x48?text=LOGO'">
+                <div class="company-name"><%= company.name %></div>
+                <div style="font-size:11px;color:#666"><%= company.industry %></div>
+              </td>
+            <% }) %>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <% if (typeof pagination !== 'undefined' && pagination && pagination.totalPages > 1) { %>
+      <div class="pagination">
+        <% if (pagination.hasPrev) { %>
+          <a href="?page=<%= pagination.page - 1 %>&limit=<%= pagination.limit %>">← Prev</a>
+        <% } %>
+        <span class="badge badge-black">Page <%= pagination.page %> of <%= pagination.totalPages %></span>
+        <% if (pagination.hasNext) { %>
+          <a href="?page=<%= pagination.page + 1 %>&limit=<%= pagination.limit %>">Next →</a>
+        <% } %>
+      </div>
+    <% } %>
 
     <% if (!companies || companies.length === 0) { %>
-      <div class="card" style="text-align:center; padding:4rem;">
-        <h3 style="border:none;">No companies listed yet</h3>
-        <p class="text-muted" style="margin-top:1rem;">Check back soon for new company profiles.</p>
+      <div class="card" style="text-align:center;padding:32px;max-width:560px;margin:18px auto 0">
+        <h3>No companies listed yet</h3>
+        <p style="color:#666;font-size:13px;margin-top:6px">Check back soon for new company profiles.</p>
+        <a href="/jobs" class="btn btn-primary" style="margin-top:12px">Browse Jobs</a>
       </div>
     <% } %>
   </div>

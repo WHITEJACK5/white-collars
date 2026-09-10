@@ -1,64 +1,123 @@
 <%- include('partials/header') %>
 <%- include('partials/navbar') %>
 
-<div class="hero">
-  <div class="hero-content">
-    <h1>Find Your <span>Dream Job</span></h1>
-    <p>Connect with top companies and discover amazing career opportunities in the tech industry</p>
-    <a href="/jobs" class="btn">Browse Jobs</a>
-    <a href="/companies" class="btn-outline">View Companies</a>
-  </div>
-</div>
-
-<section class="content-section">
+<section class="hero">
   <div class="container">
-    <h2 class="section-title">Our Impact</h2>
-    <div class="stats-section">
-      <div class="stats-grid">
-        <div class="card stat-item">
-          <div class="stat-number">50K+</div>
-          <div class="stat-label">Active Job Seekers</div>
+    <div class="hero-grid">
+      <div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <span class="badge badge-neon">● Most Advanced Job Portal</span>
+          <span class="badge badge-white">850,000+ Professionals</span>
+          <span class="badge badge-black">Grid White • Black • Neon Green</span>
         </div>
-        <div class="card stat-item">
-          <div class="stat-number">5K+</div>
-          <div class="stat-label">Companies Trust Us</div>
+        <h1>Find Your <span class="neon">Dream Job</span> with WHITE COLLARS</h1>
+        <p>Connect with <b>5K+ top companies</b> and discover 25K+ monthly openings. One-click apply with your saved documents — <b>track, manage, and scale</b> your career, fully GDPR-ready.</p>
+        <div class="hero-actions">
+          <a href="/jobs" class="btn btn-primary">Browse Jobs →</a>
+          <a href="/companies" class="btn btn-ghost">View Companies ▸</a>
         </div>
-        <div class="card stat-item">
-          <div class="stat-number">25K+</div>
-          <div class="stat-label">Jobs Posted Monthly</div>
+        <div class="trustbar">
+          <div class="trust-avatars">
+            <img src="https://i.pravatar.cc/100?img=11"><img src="https://i.pravatar.cc/100?img=12"><img src="https://i.pravatar.cc/100?img=32"><img src="https://i.pravatar.cc/100?img=33">
+          </div>
+          <span><b>4.8★ G2</b> • 4.9★ Trust • 5K+ Companies</span>
+          <span style="color:#0A0A0A;background:var(--neon);padding:4px 8px;border-radius:999px;border:1px solid var(--black);font-weight:800">Trusted by 50K+ job seekers</span>
         </div>
-        <div class="card stat-item">
-          <div class="stat-number">95%</div>
-          <div class="stat-label">Success Rate</div>
+        <div class="grid3" style="margin-top:22px;gap:12px">
+          <div class="card" style="padding:14px;box-shadow:3px 3px 0 var(--black)">
+            <div class="feature-ico" style="width:36px;height:36px;font-size:16px;margin-bottom:8px">◎</div>
+            <strong style="font-size:13px">One-Click Apply</strong>
+            <div style="font-size:12px;color:#555">Saved docs, resume, video — apply in one click.</div>
+          </div>
+          <div class="card" style="padding:14px;box-shadow:3px 3px 0 var(--black)">
+            <div class="feature-ico" style="width:36px;height:36px;font-size:16px;margin-bottom:8px">◉</div>
+            <strong style="font-size:13px">Trackable</strong>
+            <div style="font-size:12px;color:#555">Status: pending → hired, real insights.</div>
+          </div>
+          <div class="card" style="padding:14px;box-shadow:3px 3px 0 var(--black)">
+            <div class="feature-ico" style="width:36px;height:36px;font-size:16px;margin-bottom:8px">⬢</div>
+            <strong style="font-size:13px">Editable</strong>
+            <div style="font-size:12px;color:#555">Update profile, docs, video anytime.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:16px;border-bottom:1px solid #EEE;display:flex;justify-content:space-between;align-items:center;background:#FCFCFC">
+          <strong style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;background:var(--neon);border:1px solid var(--black);border-radius:50%;box-shadow:0 0 8px var(--neon)"></span> Live Jobs • WHITE COLLARS</strong>
+          <span class="badge badge-neon" style="font-size:10px"><%= (jobs && jobs.length) || 0 %> Featured</span>
+        </div>
+        <div style="padding:16px;display:grid;gap:12px;max-height:420px;overflow:auto">
+          <% if (jobs && jobs.length > 0) { %>
+            <% jobs.slice(0,3).forEach(job => { %>
+              <a href="/jobs/<%= job._id %>" class="card" style="padding:14px;display:flex;gap:12px;align-items:center;box-shadow:2px 2px 0 var(--black);text-align:left">
+                <div style="width:48px;height:48px;border-radius:12px;background:var(--neon);border:1.5px solid var(--black);display:grid;place-items:center;font-weight:900;flex-shrink:0"><%= job.company.charAt(0) %></div>
+                <div style="flex:1;min-width:0">
+                  <strong style="font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block"><%= job.title %></strong>
+                  <div style="font-size:12px;color:#666"><%= job.company %> • <%= job.location %></div>
+                </div>
+                <span class="badge badge-black" style="font-size:10px">View →</span>
+              </a>
+            <% }) %>
+          <% } else { %>
+            <div style="text-align:center;padding:20px;color:#666;font-size:13px">No featured jobs — <a href="/jobs" style="color:var(--black);font-weight:800;text-decoration:underline">Browse all jobs</a></div>
+          <% } %>
+        </div>
+        <div style="padding:12px;border-top:1px solid #EEE;display:flex;gap:8px">
+          <a href="/jobs" class="btn btn-primary btn-sm" style="flex:1;justify-content:center">Browse All Jobs</a>
+          <a href="/auth/signup" class="btn btn-ghost btn-sm" style="flex:1;justify-content:center">Register Free</a>
         </div>
       </div>
     </div>
+  </div>
+</section>
 
+<section class="section-dark">
+  <div class="container" style="position:relative;z-index:1;padding:28px 24px">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+      <div>
+        <div class="kicker neon">Built for professionals at scale</div>
+        <h2 style="font-size:28px;margin-top:10px">Safe • GDPR Ready • Fast • Reliable • Scalable</h2>
+        <p style="color:#AAA;max-width:640px">99.9% uptime, 50K+ professionals, 5K+ companies trust us. Secure sessions, encrypted docs, 24/7.</p>
+      </div>
+      <div class="stats" style="grid-template-columns:repeat(2,1fr);min-width:280px">
+        <div class="stat" style="background:#111;color:white;border-color:#222;box-shadow:none"><strong style="color:var(--neon)">50K+</strong><span>Active Seekers</span></div>
+        <div class="stat" style="background:#111;color:white;border-color:#222;box-shadow:none"><strong style="color:var(--neon)">25K+</strong><span>Jobs / mo</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div style="text-align:center;max-width:760px;margin:0 auto 28px">
+      <span class="badge badge-neon">Featured</span>
+      <h2 style="font-size:32px;letter-spacing:-.04em;margin:10px 0">Featured Jobs</h2>
+      <p style="color:#555">Handpicked openings from top companies — one-click apply with your vault.</p>
+    </div>
     <% if (jobs && jobs.length > 0) { %>
-      <h2 class="section-title">Featured Jobs</h2>
       <div class="jobs-grid">
         <% jobs.forEach(job => { %>
           <div class="job-card">
             <h3><%= job.title %></h3>
             <div class="job-company"><%= job.company %></div>
-            <div class="job-location"><%= job.location %></div>
-            <div class="job-description"><%= job.description.substring(0, 150) %>...</div>
-            <a href="/jobs/<%= job._id %>" class="apply-btn">View Details</a>
+            <div class="job-location"><%= job.location %> • <%= job.employmentType || 'Full-time' %></div>
+            <div class="job-description"><%= job.description ? job.description.substring(0, 120) + '...' : 'Exciting opportunity at ' + job.company %></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+              <a href="/jobs/<%= job._id %>" class="btn btn-primary btn-sm" style="flex:1;justify-content:center">View Details →</a>
+              <a href="/jobs/<%= job._id %>" class="btn btn-ghost btn-sm">Apply</a>
+            </div>
           </div>
-        <% }); %>
+        <% }) %>
       </div>
-    <% } %>
-
-    <% if (companies && companies.length > 0) { %>
-      <h2 class="section-title">Featured Companies</h2>
-      <div class="grid grid-4">
-        <% companies.forEach(company => { %>
-          <div class="card" style="text-align:center;">
-            <div style="font-size:2.5rem; margin-bottom:1rem;"><%= company.name.charAt(0) %></div>
-            <h3 style="border:none;"><%= company.name %></h3>
-            <div class="job-company"><%= company.industry %></div>
-          </div>
-        <% }); %>
+      <div style="text-align:center;margin-top:18px">
+        <a href="/jobs" class="btn btn-dark">Browse All Jobs →</a>
+      </div>
+    <% } else { %>
+      <div class="card" style="text-align:center;padding:32px;max-width:560px;margin:0 auto">
+        <h3 style="font-size:16px">No jobs featured right now</h3>
+        <p style="color:#666;font-size:13px;margin-top:6px">Check back soon or browse all openings.</p>
+        <a href="/jobs" class="btn btn-primary" style="margin-top:12px">Browse Jobs</a>
       </div>
     <% } %>
   </div>

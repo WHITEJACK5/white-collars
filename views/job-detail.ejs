@@ -1,116 +1,106 @@
 <%- include('partials/header') %>
 <%- include('partials/navbar') %>
 
-<div class="page-header">
-  <div class="page-header-content">
-    <h1><%= job.title %></h1>
-    <p><%= job.company %> | <%= job.location %></p>
+<section class="hero" style="padding:32px 0 16px">
+  <div class="container" style="max-width:900px;text-align:left">
+    <a href="/jobs" class="btn btn-ghost btn-sm" style="margin-bottom:12px">← Back to Jobs</a>
+    <span class="badge badge-neon"><%= job.category %></span>
+    <h1 style="font-size:36px;margin-top:10px"><%= job.title %></h1>
+    <p style="margin-top:8px"><span class="badge badge-black"><%= job.company %></span> <span style="margin-left:8px;color:#3A3A3A"><%= job.location %> • <%= job.locationType %> • <%= job.employmentType %> • <%= job.experienceLevel %></span> • <span class="badge badge-white"><%= job.views %> views</span></p>
   </div>
-</div>
+</section>
 
-<section class="content-section">
-  <div class="container">
-    <div style="max-width:900px; margin:0 auto;">
-      <div class="job-card">
-        <h3><%= job.title %></h3>
-        <div class="job-company"><%= job.company %> <% if (job.companyRef && job.companyRef.name) { %> • <%= job.companyRef.name %><% } %></div>
-        <div class="job-location"><%= job.location %> | <%= job.locationType %> | <%= job.employmentType %> | <%= job.experienceLevel %> • <%= job.views %> views</div>
-        <div style="margin:1.5rem 0;">
-          <span class="category-count"><%= job.category %></span>
-          <% if (job.salary && (job.salary.min || job.salary.max)) { %>
-            <span class="category-count" style="margin-left:0.5rem;"><%= job.salary.currency %> <%= job.salary.min || '' %> - <%= job.salary.max || '' %> <%= job.salary.period %></span>
-          <% } %>
-        </div>
-        <p style="color:#aaa; line-height:1.8; margin-bottom:2rem;"><%= job.description %></p>
+<section class="section" style="padding-top:0">
+  <div class="container" style="max-width:900px">
+    <div class="grid3" style="grid-template-columns:1.2fr .8fr;gap:18px;align-items:start">
+      <div class="card" style="padding:22px">
+        <h3 style="font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#111">About the role</h3>
+        <p style="color:#3A3A3A;line-height:1.7;margin-top:8px"><%= job.description %></p>
 
         <% if (job.skills && job.skills.length > 0) { %>
-          <div style="margin-bottom:1.5rem;">
-            <strong style="color:#39FF14;">Skills:</strong>
-            <div style="margin-top:0.5rem;">
-              <% job.skills.forEach(skill => { %>
-                <span class="category-count" style="margin-right:0.5rem;"><%= skill %></span>
-              <% }); %>
-            </div>
+          <h3 style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-top:18px">Skills</h3>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+            <% job.skills.forEach(skill => { %>
+              <span class="badge badge-white"><%= skill %></span>
+            <% }) %>
           </div>
         <% } %>
 
         <% if (job.requirements && job.requirements.length > 0) { %>
-          <div style="margin-bottom:1.5rem;">
-            <strong style="color:#39FF14;">Requirements:</strong>
-            <ul style="color:#aaa; line-height:2; padding-left:1.5rem; margin-top:0.5rem;">
-              <% job.requirements.forEach(r => { %>
-                <li><%= r %></li>
-              <% }); %>
-            </ul>
-          </div>
+          <h3 style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-top:18px">Requirements</h3>
+          <ul style="margin-top:8px;padding-left:18px;color:#3A3A3A;font-size:14px;line-height:1.7">
+            <% job.requirements.forEach(r => { %><li><%= r %></li><% }) %>
+          </ul>
         <% } %>
 
         <% if (job.responsibilities && job.responsibilities.length > 0) { %>
-          <div style="margin-bottom:2rem;">
-            <strong style="color:#39FF14;">Responsibilities:</strong>
-            <ul style="color:#aaa; line-height:2; padding-left:1.5rem; margin-top:0.5rem;">
-              <% job.responsibilities.forEach(r => { %>
-                <li><%= r %></li>
-              <% }); %>
-            </ul>
-          </div>
+          <h3 style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-top:18px">Responsibilities</h3>
+          <ul style="margin-top:8px;padding-left:18px;color:#3A3A3A;font-size:14px;line-height:1.7">
+            <% job.responsibilities.forEach(r => { %><li><%= r %></li><% }) %>
+          </ul>
         <% } %>
 
-        <% if (typeof user !== 'undefined' && user && job.postedBy && String(job.postedBy._id || job.postedBy) === String(user.id)) { %>
-          <div class="card" style="background:#111; border-color:#39FF14; margin-bottom:1.5rem; padding:1.2rem;">
-            <strong style="color:#39FF14;">You posted this job</strong>
-            <div style="margin-top:0.8rem; display:flex; gap:0.6rem; flex-wrap:wrap;">
-              <a href="/jobs/<%= job._id %>/edit" class="btn-outline btn-sm">Edit</a>
-              <a href="/employer/jobs/<%= job._id %>/applicants" class="btn btn-sm">View Applicants (<%= job.applicants ? job.applicants.length : 0 %>)</a>
-            </div>
-          </div>
-        <% } else if (typeof user !== 'undefined' && user) { %>
-          <div class="card" style="background:#111; border:1px solid #333; padding:1.5rem; margin-bottom:1rem;">
-            <h3 style="border:none; margin-bottom:1rem;">One-Click Apply</h3>
-            <p class="text-muted" style="font-size:0.9rem; margin-bottom:1rem;">Your saved profile will be submitted. Video upload will be mandatory for certain roles — you’ll be prompted if required.</p>
-            <form action="/jobs/<%= job._id %>/apply" method="POST" enctype="multipart/form-data">
-              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-              <div class="form-group">
-                <label for="coverLetter">Cover Letter (optional)</label>
-                <textarea id="coverLetter" name="coverLetter" rows="4" maxlength="2000" placeholder="Briefly explain why you're a great fit..."></textarea>
-              </div>
-              <div class="form-group">
-                <label for="resume">Resume (PDF/DOC, max 5MB)</label>
-                <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx">
-              </div>
-              <div class="form-group">
-                <label for="video">Intro Video (optional — MP4/MOV/WebM, max 50MB) — <span style="color:#39FF14;">planned mandatory for select roles</span></label>
-                <input type="file" id="video" name="video" accept=".mp4,.mov,.webm,.mkv">
-              </div>
-              <button type="submit" class="btn" style="width:100%;">Submit Application</button>
-            </form>
-          </div>
-        <% } else { %>
-          <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1rem;">
-            <a href="/auth/signin" class="btn">Sign In to Apply</a>
-            <a href="/jobs" class="btn-outline">Back to Jobs</a>
-          </div>
-        <% } %>
-
-        <% if (!user) { %>
-          <a href="/jobs" class="btn-outline btn-sm" style="margin-top:0.5rem;">Back to Jobs</a>
-        <% } %>
+        <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+          <a href="/jobs" class="btn btn-ghost">Back to Jobs</a>
+          <% if (user && job.postedBy && String(job.postedBy._id || job.postedBy) === String(user.id)) { %>
+            <a href="/jobs/<%= job._id %>/edit" class="btn btn-dark">Edit Posting</a>
+            <a href="/employer/jobs/<%= job._id %>/applicants" class="btn btn-primary">View Applicants (<%= job.applicants ? job.applicants.length : 0 %>)</a>
+          <% } %>
+        </div>
       </div>
 
-      <% if (relatedJobs && relatedJobs.length > 0) { %>
-        <h2 class="section-title" style="margin-top:4rem;">Related Jobs</h2>
-        <div class="jobs-grid">
+      <div class="card" style="padding:22px;position:sticky;top:86px">
+        <% if (user && job.postedBy && String(job.postedBy._id || job.postedBy) === String(user.id)) { %>
+          <h3 style="font-size:14px">You posted this job</h3>
+          <p style="color:#666;font-size:13px;margin-top:6px">Manage applicants or edit the posting.</p>
+          <a href="/employer/dashboard" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px">Go to Dashboard →</a>
+        <% } else if (user) { %>
+          <h3 style="font-size:14px">One-Click Apply</h3>
+          <p style="color:#666;font-size:12px;margin-top:6px">Your saved profile will be submitted. Video will be mandatory only if employer requires it.</p>
+          <form action="/jobs/<%= job._id %>/apply" method="POST" enctype="multipart/form-data" style="display:grid;gap:12px;margin-top:12px">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <div class="field">
+              <label>Cover Letter (optional)</label>
+              <textarea name="coverLetter" rows="3" maxlength="2000" placeholder="Why are you a great fit?"></textarea>
+            </div>
+            <div class="field">
+              <label>Resume (PDF/DOC, 5MB)</label>
+              <input type="file" name="resume" accept=".pdf,.doc,.docx">
+            </div>
+            <div class="field">
+              <label>Intro Video (optional, MP4/MOV/WebM, 50MB)</label>
+              <input type="file" name="video" accept=".mp4,.mov,.webm,.mkv">
+              <div style="font-size:11px;color:#666;margin-top:4px">Will be mandatory only for select roles.</div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Submit Application →</button>
+          </form>
+        <% } else { %>
+          <h3 style="font-size:14px">Ready to apply?</h3>
+          <p style="color:#666;font-size:13px;margin-top:6px">Sign in to one-click apply with your vault.</p>
+          <a href="/auth/signin" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px">Sign In to Apply →</a>
+          <a href="/auth/signup" class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:8px">Create Account</a>
+        <% } %>
+        <div style="margin-top:12px;padding:10px;background:var(--grid-white);border:1px solid #E5E7EB;border-radius:12px;font-size:12px;color:#666;text-align:center">
+          <span class="badge badge-white">Secure</span> <span class="badge badge-white">GDPR Ready</span> <span class="badge badge-white">Encrypted</span>
+        </div>
+      </div>
+    </div>
+
+    <% if (relatedJobs && relatedJobs.length > 0) { %>
+      <div style="margin-top:28px">
+        <h3 style="font-size:14px;letter-spacing:.08em;text-transform:uppercase;text-align:center">Related Jobs</h3>
+        <div class="jobs-grid" style="margin-top:14px">
           <% relatedJobs.forEach(j => { %>
-            <div class="job-card">
+            <a href="/jobs/<%= j._id %>" class="job-card" style="display:block">
               <h3><%= j.title %></h3>
               <div class="job-company"><%= j.company %></div>
               <div class="job-location"><%= j.location %></div>
-              <a href="/jobs/<%= j._id %>" class="apply-btn">View Details</a>
-            </div>
-          <% }); %>
+              <span class="badge badge-neon" style="margin-top:8px">View →</span>
+            </a>
+          <% }) %>
         </div>
-      <% } %>
-    </div>
+      </div>
+    <% } %>
   </div>
 </section>
 

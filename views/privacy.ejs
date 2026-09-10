@@ -1,32 +1,27 @@
 <%- include('partials/header') %>
 <%- include('partials/navbar') %>
 
-<div class="page-header">
-  <div class="page-header-content">
-    <h1>Privacy Policy</h1>
-    <p>How we handle your data</p>
+<section class="hero" style="padding:32px 0 16px">
+  <div class="container" style="text-align:center;max-width:760px">
+    <span class="badge badge-neon">Your privacy matters</span>
+    <h1 style="font-size:42px;margin-top:10px">Privacy <span class="neon">Policy</span></h1>
+    <p style="margin:8px auto 0">How we handle your data — secure, GDPR-ready.</p>
   </div>
-</div>
+</section>
 
-<section class="content-section">
+<section class="section" style="padding-top:0">
   <div class="container">
-    <div class="card" style="max-width:900px; margin:0 auto; text-align:left;">
+    <div class="card" style="max-width:900px;margin:0 auto;text-align:left">
       <h3>1. Data We Collect</h3>
-      <p class="text-muted">We collect account data (name, email, user type), application data (resumes, cover letters, video uploads when enabled), and usage data (job views, search queries). We do not sell your data.</p>
-
-      <h3 style="margin-top:2rem;">2. How We Use It</h3>
-      <p class="text-muted">To match job seekers with employers, process one-click applications, and improve search relevance. Employers only see data for jobs you explicitly apply to.</p>
-
-      <h3 style="margin-top:2rem;">3. Storage & Security</h3>
-      <p class="text-muted">Data is stored in MongoDB with access logging. Passwords are hashed with bcrypt. Sessions are HTTP-only, SameSite=Lax, Secure in production.</p>
-
-      <h3 style="margin-top:2rem;">4. Retention</h3>
-      <p class="text-muted">We retain account and application data until you delete your account. You may request deletion via <a href="/contact">contact</a>.</p>
-
-      <h3 style="margin-top:2rem;">5. Contact</h3>
-      <p class="text-muted">Questions? Contact support@whitecollars.example.com</p>
-
-      <p class="text-muted" style="margin-top:2rem; font-size:0.85rem;">Last updated: 2025-10-09</p>
+      <p style="color:#555;font-size:13px;margin-top:6px">Account data (name, email, user type), application data (resumes, cover letters, video), and usage data (views, searches). We do not sell your data.</p>
+      <h3 style="margin-top:18px">2. How We Use It</h3>
+      <p style="color:#555;font-size:13px;margin-top:6px">To match seekers with employers, process one-click applies, and improve relevance. Employers only see data for jobs you apply to.</p>
+      <h3 style="margin-top:18px">3. Storage & Security</h3>
+      <p style="color:#555;font-size:13px;margin-top:6px">MongoDB with access logging, bcrypt hashes, HTTP-only SameSite=Lax Secure sessions.</p>
+      <h3 style="margin-top:18px">4. Retention</h3>
+      <p style="color:#555;font-size:13px;margin-top:6px">Retained until you delete your account. Request via <a href="/contact" style="color:var(--black);font-weight:700;text-decoration:underline">contact</a>.</p>
+      <p style="color:#666;font-size:11px;margin-top:18px">Last updated: 2026-09-10</p>
+      <div style="margin-top:14px"><a href="/" class="btn btn-ghost btn-sm">← Back to Home</a></div>
     </div>
   </div>
 </section>
