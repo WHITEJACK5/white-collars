@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const dns = require('dns');
+// Corporate DNS (10.60.10.177) blocks SRV for Atlas — use public DNS for MongoSRV
+try { dns.setServers(['8.8.8.8', '1.1.1.1', '8.8.4.4']); } catch {}
 
 let cached = global._mongooseCached;
 if (!cached) {

@@ -1,4 +1,6 @@
 require('dotenv').config();
+const dns = require('dns');
+try { dns.setServers(['8.8.8.8', '1.1.1.1', '8.8.4.4']); } catch {}
 const mongoose = require('mongoose');
 const Job = require('./models/job');
 const Company = require('./models/company');
@@ -149,7 +151,7 @@ const seedDatabase = async () => {
           department: 'Product',
           location: 'Hyderabad, India',
           locationType: 'Hybrid',
-          description: 'Lead product strategy for Microsoft enterprise solutions.',
+          description: 'Lead product strategy for Microsoft enterprise solutions. Work with engineering, design, and business teams to build products that empower organizations worldwide and drive innovation.',
           requirements: ['3+ years of product management experience', 'Strong analytical skills', 'Enterprise software experience', 'MBA preferred'],
           responsibilities: ['Define product roadmap', 'Collaborate with stakeholders', 'Analyze market trends', 'Drive launches'],
           category: 'Product Management',
@@ -170,7 +172,7 @@ const seedDatabase = async () => {
           department: 'Design',
           location: 'Remote',
           locationType: 'Remote',
-          description: 'Create beautiful user experiences for Apple products.',
+          description: 'Create beautiful, intuitive user experiences for Apple products. Join a world-class design team focused on innovation and user-centered design principles for billions of users.',
           requirements: ['4+ years of UI/UX experience', 'Strong portfolio', 'Figma proficiency', 'iOS guidelines knowledge'],
           responsibilities: ['Design iOS interfaces', 'Create wireframes', 'Conduct research', 'Collaborate with engineering'],
           category: 'Design & UI/UX',
@@ -191,7 +193,7 @@ const seedDatabase = async () => {
           department: 'Data Science',
           location: 'Mumbai, India',
           locationType: 'On-site',
-          description: 'Apply ML to solve business problems at Amazon.',
+          description: 'Apply machine learning and data science to solve complex business problems at Amazon. Work with massive datasets to drive insights and build predictive models for customer experience.',
           requirements: ['MS/PhD in CS/Stats', '3+ years data science', 'Python/SQL', 'ML frameworks'],
           responsibilities: ['Build ML models', 'Analyze datasets', 'Present insights', 'Optimize recommendations'],
           category: 'Data & Analytics',
@@ -212,7 +214,7 @@ const seedDatabase = async () => {
           department: 'Engineering',
           location: 'Pune, India',
           locationType: 'On-site',
-          description: 'Design mechanical systems for Tesla vehicles.',
+          description: 'Design and develop mechanical systems for Tesla vehicles. Work on innovative automotive engineering projects in sustainable transportation and cutting-edge EV technology.',
           requirements: ['B.Tech Mechanical', '2+ years automotive', 'CAD proficiency', 'Manufacturing knowledge'],
           responsibilities: ['Design components', 'Stress analysis', 'Manufacturing collab', 'Testing'],
           category: 'Engineering (Core)',
@@ -233,7 +235,7 @@ const seedDatabase = async () => {
           department: 'Marketing',
           location: 'Gurgaon, India',
           locationType: 'Hybrid',
-          description: 'Lead marketing for Google enterprise products.',
+          description: 'Lead marketing initiatives for Google enterprise products. Develop go-to-market strategies and drive product adoption across APAC with cross-functional teams.',
           requirements: ['5+ years B2B marketing', 'Digital marketing', 'Enterprise software', 'Communication skills'],
           responsibilities: ['Develop strategies', 'Manage campaigns', 'Analyze trends', 'Work with sales'],
           category: 'Marketing & Sales',
