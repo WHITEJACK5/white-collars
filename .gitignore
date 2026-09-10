@@ -54,3 +54,11 @@ coverage/
 tmp/
 temp/
 
+
+# Local dev artifacts (not pushed)
+.turbo/
+curl_*.html
+server.log
+server.err
+run-local.ps1
+
